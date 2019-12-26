@@ -22,6 +22,7 @@ class FlightController extends Controller
      */
     public function index()
     {   
+        // http://api-airinfo.mr/api/v1/flights?include=arrival,departure&status=delayed
         $parameters = request()->input();
         
         $data = $this->flights->getFlights($parameters);
@@ -58,8 +59,12 @@ class FlightController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        $data = $this->flights->getFlight($id);
+    {   
+        // http://api-airinfo.mr/api/v1/flights/RbO170?include=arrival,departure
+        $parameters = request()->input();
+
+        $parameters['flightNumber'] = $id;
+        $data = $this->flights->getFlights($parameters);
 
         return response()->json($data);
     }

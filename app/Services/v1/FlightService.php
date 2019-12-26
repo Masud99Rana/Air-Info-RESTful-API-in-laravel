@@ -11,6 +11,11 @@ class FlightService
 		'departureAirport' => 'departure'
 	];
 
+	protected $clauseProperties = [
+		'status',
+		'flightNumber'
+	];
+
     public function getFlights($parameters)
     {	
     	// http://api-airinfo.mr/api/v1/flights?include=departure,arrival
@@ -18,24 +23,18 @@ class FlightService
         	return $this->filterFlights(Flight::all());
     	}
 
-    	$withKeys = [];
+    	$withKeys = $this->getWithKeys($parameters);
+    	
+    	$whereClauses = $this->getWithClauses($parameters);
 
-    	if(isset($parameters['include'])){
-    		$includeParms = explode(',', $parameters['include']);
-    		//departure, arrival
-    		$includes = array_intersect($this->supportedIncludes, $includeParms);
-    		// intersect mainly je value gula mile tader k alada kore,
-    		// {"arrivalAirport": "arrival", "departureAirport": "departure"}
-    		$withKeys = array_keys($includes);
-    		// array keys sudu matro key gula k alada kore... {arrivalAirport, departureAirport}
-    	}
+    	$flights = Flight::with($withKeys)->where($whereClauses)->get();
 
-    	return $this->filterFlights(Flight::with($withKeys)->get(), $withKeys);
+    	return $this->filterFlights($flights, $withKeys);
     }
 
-    public function getFlight($flightNumber){
-    	return $this->filterFlights(Flight::where('flightNumber', $flightNumber)->get());
-    }
+    // public function getFlight($flightNumber){
+    // 	return $this->filterFlights(Flight::where('flightNumber', $flightNumber)->get());
+    // }
 
 
     protected function filterFlights($flights, $keys=[]){
@@ -70,5 +69,36 @@ class FlightService
     	}
 
     	return $data;
+    }
+
+    protected function getWithKeys($parameters){
+
+    	$withKeys = [];
+
+    	if(isset($parameters['include'])){
+    		$includeParms = explode(',', $parameters['include']);
+    		//departure, arrival
+    		$includes = array_intersect($this->supportedIncludes, $includeParms);
+    		// intersect mainly je value gula mile tader k alada kore,
+    		// {"arrivalAirport": "arrival", "departureAirport": "departure"}
+    		$withKeys = array_keys($includes);
+    		// array keys sudu matro key gula k alada kore... {arrivalAirport, departureAirport}
+    	}
+
+    	return $withKeys;
+    }
+    protected function getWithClauses($parameters){
+    	// http://api-airinfo.mr/api/v1/flights?include=arrival,departure&status=delayed
+    	$clause = [];
+
+    	foreach ($this->clauseProperties as $prop) {
+
+    		if(in_array($prop, array_keys($parameters))){
+    			$clause[$prop] = $parameters[$prop];
+    		}
+    	}
+
+    	return $clause;
+    	// "status": "delayed"
     }
 }
