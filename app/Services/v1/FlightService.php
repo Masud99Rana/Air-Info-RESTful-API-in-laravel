@@ -3,6 +3,7 @@ namespace App\Services\v1;
 
 use App\Flight;
 use App\Airport;
+use Validator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class FlightService
@@ -16,6 +17,20 @@ class FlightService
 		'status',
 		'flightNumber'
 	];
+
+	protected $rules = [
+		'flightNumber' => 'required',
+		'status' => 'required|flightstatus',
+		'arrival.datetime' => 'required|date',
+		'arrival.iataCode' => 'required',
+		'departure.datetime' => 'required|date',
+		'departure.iataCode' => 'required'
+	];
+
+	public function validate($flight){
+		$validator = Validator::make($flight, $this->rules);
+		$validator->validate();
+	}
 
     public function getFlights($parameters)
     {	
