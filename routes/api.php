@@ -18,4 +18,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 //api/v1/flights 
-Route::resource('/v1/flights', v1\FlightController::class);
+Route::apiResource('/v1/flights', v1\FlightController::class);

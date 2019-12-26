@@ -2,6 +2,7 @@
 namespace App\Services\v1;
 
 use App\Flight;
+use App\Airport;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class FlightService
@@ -36,6 +37,32 @@ class FlightService
     // 	return $this->filterFlights(Flight::where('flightNumber', $flightNumber)->get());
     // }
 
+    public function createFlight($req){
+
+    	$arrivalAirport = $req->input('arrival.iataCode');
+    	$departureAirport = $req->input('departure.iataCode');
+
+    	$airports = Airport::whereIn('iataCode', [$arrivalAirport, $departureAirport])->get();
+    	$codes = [];
+
+    	foreach ($airports as $port) {
+    		$codes[$port->iataCode] = $port->id;
+    	}
+
+    	$flight = new Flight();
+    	$flight->flightNumber = $req->input('flightNumber');
+    	$flight->status = $req->input('status');
+    	$flight->arrivalAirport_id =$codes[$arrivalAirport];
+		$flight->arrivalDateTime = $req->input('arrival.datetime');
+		
+    	$flight->departureAirport_id =$codes[$departureAirport];
+		$flight->departureDateTime = $req->input('departure.datetime');
+
+		$flight->save();
+
+		return $this->filterFlights([$flight]);
+
+    }
 
     protected function filterFlights($flights, $keys=[]){
     	$data = [];
