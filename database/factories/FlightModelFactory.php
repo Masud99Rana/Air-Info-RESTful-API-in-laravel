@@ -5,8 +5,6 @@
 use App\Model;
 use Faker\Generator as Faker;
 
-
-
 $factory->define(App\Airport::class, function (Faker $faker) {
     return [
         'iataCode' => str_random(3),
@@ -14,7 +12,6 @@ $factory->define(App\Airport::class, function (Faker $faker) {
         'state' => $faker->stateAbbr
     ];
 });
-
 
 $factory->define(App\Flight::class, function (Faker $faker) {
     

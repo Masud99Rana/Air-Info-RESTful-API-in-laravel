@@ -12,6 +12,7 @@ class FlightService
 		'arrivalAirport' =>'arrival',
 		'departureAirport' => 'departure'
 	];
+    // ?include=departure,arrival
 
 	protected $clauseProperties = [
 		'status',
