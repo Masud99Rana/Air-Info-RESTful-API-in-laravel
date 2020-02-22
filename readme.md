@@ -29,7 +29,7 @@
 [![Gmail][gmail-shield]][gmail-url]
 
 ## About The Project
-RESTful API with Lumen will make the client to server communication easier with HTTP requests. In this project, I have practiced how to develop a real-world, RESTful API with Laravel for showing Flight info of a Flight System.
+RESTful API with Laravel will make the client to server communication easier with HTTP requests. In this project, I have practiced how to develop a real-world, RESTful API with Laravel for showing Flight info of a Flight System.
 
 ### Built With
 The major technologies that i have used to build this project.
@@ -60,7 +60,7 @@ Basic understanding of the technologies that i have mentioned in "[Built With](#
 
 1. Clone the repo
 ```sh
-https://github.com/Masud99Rana/E-learning-System.git
+https://github.com/Masud99Rana/Air-Info-RESTful-API-in-laravel.git
 ```
 2. Run **composer install**
 3. Run **php artisan key:generate**
